@@ -11,14 +11,12 @@ In today’s fast-paced IT environments, quick access to accurate and contextual
 
 This project introduces an AI-powered assistant that leverages **RAG** and **LangChain** to provide precise and contextual answers to questions related to:
 
-- Agile and Waterfall methodologies  
-- DevOps pipelines  
-- CI/CD practices  
+- Agile, Waterfall and other methodologies  
 - Software testing strategies  
 - SDLC best practices and documentation
 
-  # Architecture Overview
-  **Retrieval-Augmented Generation (RAG)** combines two core capabilities:
+# Architecture Overview
+**Retrieval-Augmented Generation (RAG)** combines two core capabilities:
 
 1. **Retrieval** – Fetches relevant documents from a vector database (ChromaDB) using semantic search.
 2. **Generation** – Uses an LLM to generate natural language answers grounded in the retrieved content.
