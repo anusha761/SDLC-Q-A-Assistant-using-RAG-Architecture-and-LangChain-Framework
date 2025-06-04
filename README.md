@@ -1,1 +1,1 @@
-# SDLC-Q-&-Assistant-using-RAG-Architecture-and-LangChain-Framework
+# SDLC-Q&A-Assistant-using-RAG-Architecture-and-LangChain-Framework
