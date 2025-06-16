@@ -65,17 +65,15 @@ This PDF showcases:
 
 Below are the versions of the core libraries used in this project:
 
-```text
-bitsandbytes==0.46.0
-langchain==0.3.25
-langchain-core==0.3.63
-langchain-community==0.3.25
-chromadb==1.0.12
-huggingface_hub==0.33.0
-pypdf==5.6.0
-PyMuPDF==1.26.1
-streamlit==1.45.1
-```
+- langchain==0.3.25
+- langchain-core==0.3.63
+- langchain-community==0.3.25
+- chromadb==1.0.12
+- huggingface_hub==0.33.0
+- PyMuPDF==1.26.1
+- streamlit==1.45.1
+- bitsandbytes==0.46.0
+
 
 ## Contact
 Anusha Chaudhuri [anusha761]
