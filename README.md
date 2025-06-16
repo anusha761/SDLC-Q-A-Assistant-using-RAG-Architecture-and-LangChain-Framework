@@ -71,7 +71,10 @@ Below are the versions of the core libraries used in this project:
 - chromadb==1.0.12
 - huggingface_hub==0.33.0
 - PyMuPDF==1.26.1
+- transformers==4.34.0
+- sentence-transformers==3.4.1
 - streamlit==1.45.1
+- streamlit_chat==0.1.1
 - bitsandbytes==0.46.0
 
 
