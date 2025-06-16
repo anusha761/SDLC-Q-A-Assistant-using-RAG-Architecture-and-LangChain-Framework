@@ -32,11 +32,7 @@ This project introduces an AI-powered assistant that leverages **RAG** and **Lan
 | Orchestration     | LangChain                               |
 
 
-Future Enhancements
 
-- Adding user interface (Streamlit / Gradio)
-- Expand domain coverage beyond SDLC
-- Using Pinecone DB for large scale deployment
 
 
 # Contact
