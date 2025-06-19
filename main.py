@@ -17,7 +17,7 @@ from langchain.schema.runnable import RunnableLambda
 class CustomHuggingFacePipeline(HuggingFacePipeline):
     def invoke(self, inputs, config=None, **generation_kwargs):
         generation_kwargs.setdefault("max_new_tokens", 256)
-        generation_kwargs.setdefault("temperature", 0.5)
+        generation_kwargs.setdefault("temperature", 0.2)
         generation_kwargs.setdefault("do_sample", True)
         return super().invoke(inputs, config=config, **generation_kwargs)
 
@@ -46,7 +46,7 @@ def load_local_llm():
         model=model,
         tokenizer=tokenizer,
         max_new_tokens=256,
-        temperature=0.5,
+        temperature=0.2,
         do_sample=True,
     )
     return CustomHuggingFacePipeline(pipeline=generator)
