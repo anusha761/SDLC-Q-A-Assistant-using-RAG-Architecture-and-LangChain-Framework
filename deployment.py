@@ -5,7 +5,7 @@ from pyngrok import conf
 from huggingface_hub import login
 
 
-
+os.environ["HUGGINGFACEHUB_API_TOKEN"]="<hf_token>"
 login(os.environ["HUGGINGFACEHUB_API_TOKEN"])
 
 conf.get_default().auth_token = "<ngrok_token>"
