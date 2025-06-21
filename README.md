@@ -34,8 +34,6 @@ To launch the Streamlit app:
 streamlit run main.py
 ```
 
-Make sure all required dependencies are installed.
-
 ## Tech Stack
 
 | Component         | Technology Used                          |
@@ -49,13 +47,13 @@ Make sure all required dependencies are installed.
 
 ## Streamlit UI Screenshots
 
-To view the chatbot interface and how users interact with the system in real time, refer to the screenshots provided in the PDF below:
+To view the chatbot interface and how users interact with the system in real time, refer to the screenshot provided in the PDF below:
 
 📄 [View Streamlit UI Screenshots](./outputScreenshots.pdf)
 
 This PDF showcases:
 
-- The user input field for asking SDLC-related questions
+- The user input field for asking SDLC related questions
 - Model-generated answers
 - Clean and responsive Streamlit layout
 - Real-time query response flow
