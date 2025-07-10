@@ -86,7 +86,7 @@ def build_rag_chain(_llm):
     )
     retriever = db.as_retriever()
 
-    # Use RunnablePassthrough for question because input is a string and both retriever & question get it
+    # Building the RAG chain
     chain = (
         {"context": retriever, "question": RunnablePassthrough()}
         | get_prompt_template()
