@@ -1,63 +1,25 @@
 import streamlit as st
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
-from langchain.llms import HuggingFacePipeline
+import re
+from sentence_transformers import CrossEncoder
 from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.schema.runnable import RunnablePassthrough
-from langchain_core.output_parsers import StrOutputParser
-import torch
-import re
+from langchain.schema.runnable import RunnableLambda, RunnablePassthrough
+from langchain.chat_models import ChatOpenAI
+import os
 
-from langchain.schema.runnable import RunnableLambda
-
-
-
-# --- Custom LLM Wrapper ---
-class CustomHuggingFacePipeline(HuggingFacePipeline):
-    def invoke(self, inputs, config=None, **generation_kwargs):
-        generation_kwargs.setdefault("max_new_tokens", 256)
-        generation_kwargs.setdefault("temperature", 0.2)
-        generation_kwargs.setdefault("do_sample", True)
-        return super().invoke(inputs, config=config, **generation_kwargs)
-
-# --- Load Model with Caching ---
+# Load GPT-3.5 Model
 @st.cache_resource
-def load_local_llm():
-    model_id = "mistralai/Mistral-7B-Instruct-v0.3"
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
+def load_openai_llm():
+    return ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.1)
 
-    try:
-        model = AutoModelForCausalLM.from_pretrained(
-            model_id,
-            device_map="auto",
-            torch_dtype=torch.float16,
-            load_in_4bit=True,
-        )
-    except Exception:
-        model = AutoModelForCausalLM.from_pretrained(
-            model_id,
-            device_map="auto",
-            torch_dtype=torch.float16,
-        )
 
-    generator = pipeline(
-        "text-generation",
-        model=model,
-        tokenizer=tokenizer,
-        max_new_tokens=256,
-        temperature=0.2,
-        do_sample=True,
-    )
-    return CustomHuggingFacePipeline(pipeline=generator)
-
-# --- Prompt Template ---
 def get_prompt_template():
     return PromptTemplate(
         input_variables=["context", "question"],
         template="""You are a professional assistant with deep knowledge of Software Development Life Cycle (SDLC). 
 
-Answer the user's question concisely, within 30 sentences. The user's question is given below:
+Answer the user's question concisely, within 20 sentences. The user's question is given below:
 
 
 {question}
@@ -77,35 +39,63 @@ Provide your answer below.
 Answer:"""
     )
 
-# --- Build RAG Chain ---
+# Cross-Encoder Reranker
 @st.cache_resource
-def build_rag_chain(_llm):
+def load_reranker():
+    return CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+
+def rerank_documents(query, docs, reranker, top_k=2):
+    if not docs:
+        st.warning("No documents retrieved for the query; skipping reranking.")
+        return []
+    pairs = [(query, doc.page_content) for doc in docs]
+    scores = reranker.predict(pairs)
+    scored_docs = list(zip(scores, docs))
+    scored_docs.sort(key=lambda x: x[0], reverse=True)
+    top_docs = [doc for _, doc in scored_docs[:top_k]]
+    return top_docs
+
+# RAG Chain with Reranking
+@st.cache_resource
+def build_rag_chain(_llm, _reranker):
     db = Chroma(
-        persist_directory="chroma_db",
+        persist_directory="chroma_db_sdlc_store",
         embedding_function=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     )
-    retriever = db.as_retriever()
+    retriever = db.as_retriever(search_kwargs={"k": 4})  # Ensure top 4 chunks are retrieved
 
-    # Building the RAG chain
+    def retrieve_and_rerank(query):
+        docs = retriever.get_relevant_documents(query)
+        st.write(f"Retrieved {len(docs)} documents for query: {query}")
+        top_docs = rerank_documents(query, docs, _reranker, top_k=2)
+        if not top_docs:
+            return "No relevant context found."
+        return "\n\n".join([doc.page_content for doc in top_docs])
+
+    # Build the chain
     chain = (
-        {"context": retriever, "question": RunnablePassthrough()}
+        {
+            "context": RunnableLambda(retrieve_and_rerank),
+            "question": RunnablePassthrough()
+        }
         | get_prompt_template()
         | _llm
-        | RunnableLambda(lambda output: re.search(r"Answer:\s*(.*)", output, re.DOTALL).group(1).strip() if re.search(r"Answer:\s*(.*)", output, re.DOTALL) else output.strip())
+        | RunnableLambda(lambda output: output.content.strip())
     )
     return chain
 
-# --- Load Model and Chain ---
-llm = load_local_llm()
-rag_chain = build_rag_chain(llm)
+# Load Components
+llm = load_openai_llm()
+reranker = load_reranker()
+rag_chain = build_rag_chain(llm, reranker)
 
-# --- Streamlit UI ---
+# Streamlit UI
 st.title("SDLC Chatbot")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat history
+
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
