@@ -8,12 +8,12 @@ from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferWindowMemory
 import os
 
-# --- Load GPT-4o-mini Model for improved context handling ---
+# Load GPT-4o-mini Model
 @st.cache_resource
 def load_openai_llm():
     return ChatOpenAI(model_name="gpt-4o-mini", temperature=0.1)
 
-# --- Prompt Template ---
+# Prompt Template
 def get_prompt_template():
     return PromptTemplate(
         input_variables=["context", "question", "chat_history"],
@@ -46,7 +46,7 @@ Answer:
 """
     )
 
-# --- Cross-Encoder Reranker ---
+# Cross-Encoder Reranker
 @st.cache_resource
 def load_reranker():
     return CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
@@ -62,7 +62,7 @@ def rerank_documents(query, docs, reranker, top_k=2):
     top_docs = [doc for _, doc in scored_docs[:top_k]]
     return top_docs
 
-# --- Build Conversational Retrieval Chain with Reranking and Memory ---
+# Build Conversational Retrieval Chain with Reranking and Memory
 @st.cache_resource
 def build_rag_chain(_llm, _reranker, _memory):
     db = Chroma(
@@ -108,13 +108,13 @@ def build_rag_chain(_llm, _reranker, _memory):
         )
     }
 
-# --- Initialize Components ---
+# Initialize Components
 llm = load_openai_llm()
 reranker = load_reranker()
 memory = ConversationBufferWindowMemory(memory_key="chat_history", return_messages=False, k=1)
 rag_chain = build_rag_chain(llm, reranker, memory)
 
-# --- Streamlit UI ---
+# Streamlit UI
 st.title("SDLC Chatbot")
 
 if "messages" not in st.session_state:
