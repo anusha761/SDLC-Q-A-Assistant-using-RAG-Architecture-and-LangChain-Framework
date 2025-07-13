@@ -1,4 +1,4 @@
-# SDLC-Q&A-Assistant: Intelligent Context-Aware RAG-based Chatbot for Software Development Lifecycle using LangChain
+# SDLC Q&A Assistant: Context-Aware RAG Chatbot for Software Development Teams Using LangChain
 
 An enterprise-grade AI chatbot that answers contextual, domain-specific questions about the Software Development Lifecycle (SDLC) using Retrieval-Augmented Generation (RAG). Built using the LangChain framework, ChromaDB, Cross-Encoder reranking, and OpenAI/HuggingFace LLMs, this repository contains two progressively advanced chatbot implementations for SDLC knowledge automation one being a basic RAG with Cross-Encoder Reranking and another with both Cross-Encoder Reranking and Contextual Memory.
 
