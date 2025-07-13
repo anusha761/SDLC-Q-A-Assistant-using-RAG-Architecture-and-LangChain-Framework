@@ -16,7 +16,8 @@ conf.get_default().auth_token = "<ngrok_token>"
 ngrok.kill()
 
 # Run Streamlit in background
-os.system("streamlit run main.py &")
+# os.system("streamlit run main.py &")
+os.system("streamlit run main_with_context.py &")
 
 # Open Ngrok tunnel
 public_url = ngrok.connect(8501)
