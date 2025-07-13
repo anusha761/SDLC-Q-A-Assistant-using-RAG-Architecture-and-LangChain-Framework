@@ -102,6 +102,7 @@ streamlit run main_with_context.py
 To view the chatbot interface and how users interact with the system in real time, refer to the screenshots provided in the PDFs below:
 
 [View Streamlit UI Screenshots - Basic RAG with Cross-Encoder Reranking](./outputScreenshots.pdf)
+
 [View Streamlit UI Screenshots - RAG with Cross-Encoder Reranking and Contextual Memory](./outputScreenshots_contextual.pdf)
 
 These PDFs showcase:
