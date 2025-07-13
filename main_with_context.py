@@ -66,7 +66,7 @@ def rerank_documents(query, docs, reranker, top_k=2):
 @st.cache_resource
 def build_rag_chain(_llm, _reranker, _memory):
     db = Chroma(
-        persist_directory="chroma_db_sdlc_store",
+        persist_directory="chroma_db_sdlc_pdf",
         embedding_function=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     )
     retriever = db.as_retriever(search_kwargs={"k": 4})
