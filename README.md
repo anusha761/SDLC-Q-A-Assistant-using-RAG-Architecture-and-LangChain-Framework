@@ -97,13 +97,13 @@ streamlit run main_with_memory.py
 | Reranker Model     | cross-encoder/ms-marco-MiniLM-L-6-v2                               |
 | Frontend UI       | Streamlit                               |
 
-## Streamlit UI Screenshots
+## Streamlit UI Detailed Screenshots
 
 To view the chatbot interface and how users interact with the system in real time, refer to the screenshots provided in the PDFs below:
 
-[View Streamlit UI Screenshots - Basic RAG with Cross-Encoder Reranking](./outputScreenshots.pdf)
+[View Streamlit Detailed UI Screenshots - Basic RAG with Cross-Encoder Reranking](./outputScreenshots.pdf)
 
-[View Streamlit UI Screenshots - RAG with Cross-Encoder Reranking and Contextual Memory](./outputScreenshots_memory.pdf)
+[View Streamlit UI Detailed Screenshots - RAG with Cross-Encoder Reranking and Contextual Memory](./outputScreenshots_memory.pdf)
 
 These PDFs showcase:
 
@@ -111,7 +111,17 @@ These PDFs showcase:
 - Model-generated answers
 - Clean and responsive Streamlit layout
 - Real-time query response flow
-  
+
+## Highlights
+
+(RAG with Cross Encoder Reranking and Contextual Memory)
+
+### Screenshot 1
+<img width="709" height="836" alt="image" src="https://github.com/user-attachments/assets/ea25cfb3-e5df-4ebe-ab36-0bf4df77bd24" />
+
+### Screenshot 2
+<img width="699" height="809" alt="image" src="https://github.com/user-attachments/assets/404e2fd9-a3ab-4961-b355-0c3ff61a3005" />
+
 
 ## Library Versions
 
