@@ -83,7 +83,7 @@ streamlit run main.py
 ```
 
 ```bash
-streamlit run main_with_context.py
+streamlit run main_with_memory.py
 ```
 
 ## Tech Stack
@@ -103,7 +103,7 @@ To view the chatbot interface and how users interact with the system in real tim
 
 [View Streamlit UI Screenshots - Basic RAG with Cross-Encoder Reranking](./outputScreenshots.pdf)
 
-[View Streamlit UI Screenshots - RAG with Cross-Encoder Reranking and Contextual Memory](./outputScreenshots_contextual.pdf)
+[View Streamlit UI Screenshots - RAG with Cross-Encoder Reranking and Contextual Memory](./outputScreenshots_memory.pdf)
 
 These PDFs showcase:
 
