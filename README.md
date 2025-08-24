@@ -25,7 +25,7 @@ This repository contains two implementations of the RAG-based chatbot, each show
 
 - LLM: GPT-3.5-Turbo  
 - RAG Type: Classic RAG with semantic search  
-- Enhancement: Cross-encoder reranker improves retrieval relevance  
+- Enhancement: Cross-encoder reranker improves retrieval relevance using LangChain’s ContextualCompressionRetriever
 - Memory: Stateless (single-turn, no conversation history)  
 - Use Case: Lightweight but highly accurate for standalone SDLC questions  
 
@@ -38,7 +38,7 @@ This repository contains two implementations of the RAG-based chatbot, each show
 - Enhancement: 
   - Uses `ConversationBufferWindowMemory` to keep recent chat history (k=1)  
   - Resolves ambiguous or pronoun-based questions.
-  - Cross-encoder reranking for improved document relevance  
+  - Cross-encoder reranking for improved document relevance, implemented via a custom pipeline to allow finer control over memory-context coordination  
 - Use Case: Smarter multi-turn assistant that retains conversation flow and resolves references 
 
 ## Architecture Overview
