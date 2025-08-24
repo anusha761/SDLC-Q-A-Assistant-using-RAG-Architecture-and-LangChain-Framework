@@ -6,6 +6,9 @@ from langchain.vectorstores import Chroma
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.schema.runnable import RunnableLambda, RunnablePassthrough
 from langchain.chat_models import ChatOpenAI
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CrossEncoderReranker
+from sentence_transformers import CrossEncoder
 import os
 
 # Load GPT-3.5 Model
@@ -44,16 +47,6 @@ Answer:"""
 def load_reranker():
     return CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
 
-def rerank_documents(query, docs, reranker, top_k=2):
-    if not docs:
-        st.warning("No documents retrieved for the query; skipping reranking.")
-        return []
-    pairs = [(query, doc.page_content) for doc in docs]
-    scores = reranker.predict(pairs)
-    scored_docs = list(zip(scores, docs))
-    scored_docs.sort(key=lambda x: x[0], reverse=True)
-    top_docs = [doc for _, doc in scored_docs[:top_k]]
-    return top_docs
 
 # RAG Chain with Reranking
 @st.cache_resource
@@ -62,20 +55,30 @@ def build_rag_chain(_llm, _reranker):
         persist_directory="chroma_db_sdlc_pdf",
         embedding_function=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     )
-    retriever = db.as_retriever(search_kwargs={"k": 4})  # Ensure top 4 chunks are retrieved
+    # Base retriever
+    base_retriever = db.as_retriever(search_kwargs={"k": 4})  # Retrieve more for reranking
 
-    def retrieve_and_rerank(query):
+    # Cross-encoder reranker wrapped as compressor
+    reranker = CrossEncoderReranker(model=_reranker, top_n=2)
+
+    # Compose contextual retriever
+    retriever = ContextualCompressionRetriever(
+        base_retriever=base_retriever,
+        base_compressor=reranker
+    )
+
+    
+    def retrieve_context(query):
         docs = retriever.get_relevant_documents(query)
         st.write(f"Retrieved {len(docs)} documents for query: {query}")
-        top_docs = rerank_documents(query, docs, _reranker, top_k=2)
-        if not top_docs:
+        if not docs:
             return "No relevant context found."
-        return "\n\n".join([doc.page_content for doc in top_docs])
+        return "\n\n".join([doc.page_content for doc in docs])
 
     # Build the chain
     chain = (
         {
-            "context": RunnableLambda(retrieve_and_rerank),
+            "context": RunnableLambda(retrieve_context),
             "question": RunnablePassthrough()
         }
         | get_prompt_template()
